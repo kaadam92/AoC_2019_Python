@@ -102,10 +102,11 @@ def get_data(filename, separator):
 
 print("AoC 2019 Day 2 - Python")
 range_num = get_data("data.txt", "-")
+
 print("Test: {}".format(test_num_checker(test_vector)))
 part_1_possible, part_1_possible_list = part_1(range_num)
 print("Solution: {}".format(part_1_possible)) # 579
 
-part_2_possible = part_2(part_1_possible_list)
 print("Test: {}".format(part_2(test_vector)))
+part_2_possible = part_2(part_1_possible_list)
 print("Solution: {}".format(part_2_possible)) # 358
