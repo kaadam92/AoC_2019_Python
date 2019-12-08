@@ -1,6 +1,6 @@
 import sys
 
-test_vector = [111111, 223450, 123789, 123389, 111122, 112222]
+test_vector = [111111, 223450, 123789, 123389, 111122, 112222, 111222]
 
 
 def test_num_checker(test_data):
@@ -18,17 +18,18 @@ def part_1(range_num):
             possible_count += 1
             possible_list.append(x)
 
-    return possible_count
+    return possible_count, possible_list
 
 
-def part_2():
+def part_2(possible_list):
     print('-------------PART II-----------')
+    part_2_list = possible_list.copy()
     possible_count = 0
-    possible_list = []
-    for x in range(range_num[0], range_num[1]):
+    part_2_out = []
+    for x in part_2_list:
         if check_number_pt2(x):
+            part_2_out.append(x)
             possible_count += 1
-            possible_list.append(x)
 
     return possible_count
 
@@ -50,29 +51,39 @@ def check_number_pt1(num):
         return 0
 
 
-def only_2_repeat(num1, num2, num3):
-    if num1 == num2 and num2 == num3:
-        return 0
-    else:
-        return 1
-
-
 def check_number_pt2(num):
     input_num_str = (str)(num)
-    adjesent_same = 0
-    adjesent_not_desc = 1
-    only_2_repeat_check = 0
+    two_rep_check = 0
+    rep_count = 1
+    repetitive = 0
+    reps = []
 
-    for digit_index in range(len(input_num_str)-1):
+    for digit_index in range(0, 5):
         if input_num_str[digit_index] == input_num_str[digit_index + 1]:
-            adjesent_same = 1
-            if (digit_index > 0) and only_2_repeat_check == 0:
-                only_2_repeat_check = only_2_repeat((input_num_str[digit_index-1]), (input_num_str[digit_index]), (input_num_str[digit_index+1]))
+            repetitive = 1
+            rep_count += 1
+        else:
+            if repetitive == 0:
+                rep_count = 1
+            else:
+                reps.append(rep_count)
+                repetitive = 0
+                rep_count = 1
+        if digit_index == 4 and repetitive == 1:
+            reps.append(rep_count)
 
-        if input_num_str[digit_index] > input_num_str[digit_index + 1]:
-            adjesent_not_desc = 0
+    for rep in reps:
+        if rep == 2:
+            two_rep_check = 1
 
-    if adjesent_same and adjesent_not_desc and only_2_repeat_check:
+    if two_rep_check:
+        return 1
+    else:
+        return 0
+
+
+def only_2_repeat(num1, num2, num3):
+    if (num1 == num2 or num2 == num3) and num1 != num3:
         return 1
     else:
         return 0
@@ -92,6 +103,9 @@ def get_data(filename, separator):
 print("AoC 2019 Day 2 - Python")
 range_num = get_data("data.txt", "-")
 print("Test: {}".format(test_num_checker(test_vector)))
-print("Solution: {}".format(part_1(range_num))) # 579
-print("Test: {}".format(test_num_checker(test_vector)))
-print("Solution: {}".format(part_2()))
+part_1_possible, part_1_possible_list = part_1(range_num)
+print("Solution: {}".format(part_1_possible)) # 579
+
+part_2_possible = part_2(part_1_possible_list)
+print("Test: {}".format(part_2(test_vector)))
+print("Solution: {}".format(part_2_possible)) # 358
